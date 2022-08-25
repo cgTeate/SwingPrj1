@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
-public class FirstSwingPrj extends JFrame {
-  public FirstSwingPrj(){
+public class LoginForm extends JFrame {
+  public LoginForm(){
     super("FirstSwingPrj");
     //code to build the UI here 
 
@@ -52,7 +52,7 @@ public class FirstSwingPrj extends JFrame {
   setVisible(true);
 }
 public static void main(String[] args) {
-  new FirstSwingPrj();
+  new LoginForm();
   
 }
 
