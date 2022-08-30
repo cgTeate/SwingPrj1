@@ -8,6 +8,7 @@ public class Project01 extends JFrame {
     private JButton button2;
     private JPanel panel1;
     private JPanel panel2;
+
     public Project01() {
         super("Project01");
 
@@ -18,11 +19,11 @@ public class Project01 extends JFrame {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         add(buttonPanel, BorderLayout.WEST);
 
-        JButton button1=new JButton("Panel 1");
+        button1=new JButton("Panel 1");
         button1.addActionListener(ah);
         buttonPanel.add(button1);
 
-        JButton button2=new JButton("Panel 2");
+        button2=new JButton("Panel 2");
         button2.addActionListener(ah);
         buttonPanel.add(button2);
 
@@ -30,17 +31,18 @@ public class Project01 extends JFrame {
         mainPanel.setLayout(new GridLayout(2,1));
         add(mainPanel);
 
-        JPanel panel1=new JPanel();
+        panel1=new JPanel();
         panel1.setPreferredSize(new Dimension(200, 200));
         panel1.setBackground(Color.LIGHT_GRAY);
         mainPanel.add(panel1);
 
-        JPanel panel2=new JPanel();
+        panel2=new JPanel();
         panel2.setPreferredSize(new Dimension(200, 200));
         panel2.setBackground(Color.LIGHT_GRAY);
         mainPanel.add(panel2);
 
         mainPanel.add(panel1);
+        mainPanel.add(panel2);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -52,11 +54,23 @@ public class Project01 extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource()==button1)
             {
-                panel1.setBackground(Color.BLUE);
+                if(panel1.getBackground()==Color.LIGHT_GRAY){
+                    panel1.setBackground(Color.BLUE);
+                }
+                else {
+                    panel1.setBackground(Color.LIGHT_GRAY);
+                }
             }
             else if(e.getSource()==button2)
             {
-                panel2.setBackground(Color.GREEN);;
+                if(panel2.getBackground()==Color.LIGHT_GRAY){
+                    panel2.setBackground(Color.GREEN);
+                } 
+                else {
+                    panel2.setBackground(Color.LIGHT_GRAY);
+                }
+                
+
             }
     }       
     }
