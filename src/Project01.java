@@ -69,8 +69,6 @@ public class Project01 extends JFrame {
                 else {
                     panel2.setBackground(Color.LIGHT_GRAY);
                 }
-                
-
             }
     }       
     }
