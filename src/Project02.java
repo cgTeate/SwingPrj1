@@ -13,10 +13,10 @@ public class Project02 extends JFrame {
         private int[] by;
         private int[] sx;
         private int[] sy;
-        private int[] xoff;
-        private int[] yoff;
-        private int[] origx;
-        private int[] origy;
+        private int xoff;
+        private int yoff;
+        private int origx;
+        private int origy;
         private BufferedImage redBallBI;
         private int selected=-1;
         private boolean[] gone;
@@ -40,10 +40,6 @@ public class Project02 extends JFrame {
         by=new int[10];
         sx=new int[10];
         sy=new int[10];
-        origx=new int[10];
-        origy=new int[10];
-        xoff=new int[10];
-        yoff=new int[10];
 
         for(int i=0; i<bx.length; i++){
             bx[i]=40+(i%5)*50;
@@ -136,32 +132,43 @@ public class Project02 extends JFrame {
         {
             //tells which ball is selected
             for(int i=0;i<bx.length;i++){
+            
                 if(Math.abs(e.getX()-bx[i])<20 && Math.abs(e.getY()-by[i])<20)
                 {
-                    xoff[i]=e.getX()-bx[i];
-                    yoff[i]=e.getY()-by[i];
+                    //holds the original position of the selected ball
+                    origx=bx[i];
+                    origy=by[i];
+                    //becomes the new x,y positions
+                    xoff=e.getX()-bx[i];
+                    yoff=e.getY()-by[i];
                     selected=i;
                 }
-                System.out.println(bx[i]);
+                
             }
         }
         public void mouseReleased(MouseEvent e) {
-           
-            //resets selected whe mouse is released
-            selected=-1;
+
+            //check to see if you're within the matching square
+            if((Math.abs(e.getX()-sx[selected])<20 || Math.abs(e.getX()+sx[selected])>20 )  && (Math.abs(e.getY()-sy[selected])<20  || Math.abs(e.getY()+sx[selected])>20 )) {
+                gone[selected]=true;
+            }
+            
             //reset the position of the ball once released
-            //origx[selected]=origx[];
-            //origy[selected]=origy[selected];
+            bx[selected]=origx;
+            by[selected]=origy;
+            gamePanel.repaint();
+            //resets selected when mouse is released
+            selected=-1;
+
         }
     }
 
     private class MouseMotionHandler extends MouseMotionAdapter {
         public void mouseDragged(MouseEvent e) {
             if(selected==-1) return;
-            //bx[selected]=e.getX()-xoff[selected]; 
-            //by[selected]=e.getY()-yoff[selected];
-            bx[selected]=e.getX();
-            by[selected]=e.getY();
+            //sets the new offset positions while dragging
+            bx[selected]=e.getX()-xoff; 
+            by[selected]=e.getY()-yoff;
             gamePanel.repaint();
 
     }
