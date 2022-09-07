@@ -7,6 +7,7 @@ import java.io.*;
 
 
 
+
 public class Project02 extends JFrame {
         private GamePanel gamePanel;
         private int[] bx;
@@ -40,6 +41,19 @@ public class Project02 extends JFrame {
         by=new int[10];
         sx=new int[10];
         sy=new int[10];
+        gone=new boolean[10];
+        ia=new int[10];
+
+        
+       for (int i=0; i<ia.length; i++) ia[i]=i;
+
+        for(int i=0; i<ia.length; i++){
+            int index = (int) (Math.random() * ia.length);
+            int index2 = (int) (Math.random() * ia.length);
+            int tmp=ia[index];
+            ia[index]=ia[index2];
+            ia[index2]=tmp;
+        }
 
         for(int i=0; i<bx.length; i++){
             bx[i]=40+(i%5)*50;
@@ -47,6 +61,8 @@ public class Project02 extends JFrame {
             sx[i]=40+(i%5)*50;
             sy[i]=200+(i/5)*50;
         }
+
+        
 
         try {
             redBallBI=ImageIO.read(new File("red.png"));
@@ -70,21 +86,21 @@ public class Project02 extends JFrame {
                 g.setColor(Color.BLACK);
                 g.fillRect(sx[i]-20,sy[i]-20,40,40);
                 g.setColor(Color.WHITE);
-                g.drawString(""+i,sx[i]-3,sy[i]+4);
+                g.drawString(""+ia[i],sx[i]-3,sy[i]+4);
             }
-            //draws the red balls at the cneter of each
+            //draws the red balls at the center of each
             for(int i=0;i<bx.length;i++){
-                //if(gone[i]) continue;
+                if(gone[i]) continue;
                 if(i==selected)continue;
                 g.drawImage(redBallBI,bx[i]-20,by[i]-20,null);
                 g.setColor(Color.WHITE);
-                g.drawString(""+i,bx[i]-3,by[i]+4);
+                g.drawString(""+ia[i],bx[i]-3,by[i]+4);
             }
             //draws selected ball over the others 
             if(selected!=-1){
                 g.drawImage(redBallBI,bx[selected]-20,by[selected]+-20,null);
                 g.setColor(Color.WHITE);
-                g.drawString(""+selected,bx[selected]-3,by[selected]+4);
+                g.drawString(""+ia[selected],bx[selected]-3,by[selected]+4);
             }
             
         }
@@ -132,7 +148,8 @@ public class Project02 extends JFrame {
         {
             //tells which ball is selected
             for(int i=0;i<bx.length;i++){
-            
+                
+                //if the mouse is within the ball
                 if(Math.abs(e.getX()-bx[i])<20 && Math.abs(e.getY()-by[i])<20)
                 {
                     //holds the original position of the selected ball
@@ -148,9 +165,14 @@ public class Project02 extends JFrame {
         }
         public void mouseReleased(MouseEvent e) {
 
+            if(selected==-1) return;
             //check to see if you're within the matching square
-            if((Math.abs(e.getX()-sx[selected])<20 || Math.abs(e.getX()+sx[selected])>20 )  && (Math.abs(e.getY()-sy[selected])<20  || Math.abs(e.getY()+sx[selected])>20 )) {
-                gone[selected]=true;
+            for(int i=0;i<bx.length;i++){
+            if((Math.abs(e.getX()-sx[i]))<20 && (Math.abs(e.getY()-sy[i]))<20 ) {
+                if(i==selected){
+                    gone[i]=true;
+                }
+            }
             }
             
             //reset the position of the ball once released
@@ -159,6 +181,8 @@ public class Project02 extends JFrame {
             gamePanel.repaint();
             //resets selected when mouse is released
             selected=-1;
+        
+            
 
         }
     }
