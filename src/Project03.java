@@ -8,7 +8,7 @@ import java.io.*;
 
 
 
-public class Project02 extends JFrame {
+public class Project03 extends JFrame {
         private GamePanel gamePanel;
         private int[] bx;
         private int[] by;
@@ -24,8 +24,8 @@ public class Project02 extends JFrame {
         private int[] ia;
 
 
-    public Project02() {
-        super("Project02");
+    public Project03() {
+        super("Project03");
 
         MouseHandler mh = new MouseHandler();
         MouseMotionHandler mmh = new MouseMotionHandler();
@@ -106,6 +106,42 @@ public class Project02 extends JFrame {
         }
     }
 
+    private class AnimationThread extends Thread{
+        private int index;
+        private float startx;
+        private float starty;
+        private float endx;
+        private float endy;
+        private int steps;
+        private float deltax;
+        private float deltay;
+
+        public AnimationThread(int index, float startx, float starty, float endx, float endy) { 
+            this.index=index;
+            this.startx=startx;
+            this.starty=starty;
+            this.endx=index;
+            this.index=index;
+            steps=((int)Math.sqrt((endx-startx)*(endx-startx)+(endy-starty)*(endy-starty))/10);
+            deltax=(endx-startx)/steps;
+            deltay=(endy-starty)/steps;
+        }
+
+        public void run(){
+            try {
+                for(int i=0;i<steps;i++){
+                    sleep(20);
+                    bx[index]+=deltax;
+                    by[index]+=deltay;
+                    gamePanel.repaint();
+                }
+                
+            } catch (InterruptedException ie) {
+                
+            }
+        }
+    }
+
     private class MouseHandler extends MouseAdapter 
     {
         public void mousePressed(MouseEvent e) 
@@ -163,7 +199,7 @@ public class Project02 extends JFrame {
 }
 
     public static void main(String[] args) {
-        new Project02();
+        new Project03();
     }
 }
 
