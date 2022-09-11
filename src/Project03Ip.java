@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.imageio.*;
 import java.io.*;
 
-public class Project03 extends JFrame {
+public class Project03Ip extends JFrame {
         private GamePanel gamePanel;
         private int[] bx;
         private int[] by;
@@ -21,7 +21,7 @@ public class Project03 extends JFrame {
         private int[] ia;
 
 
-    public Project03() {
+    public Project03Ip() {
         super("Project03");
 
         MouseHandler mh = new MouseHandler();
@@ -115,17 +115,17 @@ public class Project03 extends JFrame {
         private float deltay;
         private Toolkit toolkit;
 
-        public AnimationThread(int index, float startx, float starty, float endx, float endy) { 
-            this.index=index;
-            this.startx=startx;
-            this.starty=starty;
-            this.endx=endx;
-            this.endy=endy;
-            steps=(int)(Math.sqrt((endx-startx)*(endx-startx)
-                                +(endy-starty)*(endy-starty))/10f);
-            deltax=(endx-startx)/steps;
-            deltay=(endy-starty)/steps;
-        }
+        // public GameThread(int index, float startx, float starty, float endx, float endy) { 
+        //     this.index=index;
+        //     this.startx=startx;
+        //     this.starty=starty;
+        //     this.endx=endx;
+        //     this.endy=endy;
+        //     steps=(int)(Math.sqrt((endx-startx)*(endx-startx)
+        //                         +(endy-starty)*(endy-starty))/10f);
+        //     deltax=(endx-startx)/steps;
+        //     deltay=(endy-starty)/steps;
+        // }
 
         public void run(){
             try {
@@ -203,7 +203,7 @@ public class Project03 extends JFrame {
 }
 
     public static void main(String[] args) {
-        new Project03();
+        new Project03Ip();
     }
 }
 
