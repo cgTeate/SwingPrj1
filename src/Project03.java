@@ -4,6 +4,7 @@ import java.awt.image.*;
 import javax.swing.*;
 import javax.imageio.*;
 import java.io.*;
+import java.util.*;
 
 public class Project03 extends JFrame {
         private GamePanel gamePanel;
@@ -20,7 +21,8 @@ public class Project03 extends JFrame {
         private boolean[] gone;
         private int[] ia;
         private Toolkit toolkit;
-        private AnimationThread animationThread;
+        private GameThread gameThread;
+        ArrayList<AnimationParams> animationList;
 
 
     public Project03() {
@@ -69,6 +71,10 @@ public class Project03 extends JFrame {
             System.out.println(ioe);
         }
 
+        animationList=new ArrayList<AnimationParams>();
+
+        new GameThread().start();
+
         toolkit=getToolkit();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -106,48 +112,63 @@ public class Project03 extends JFrame {
         }
     }
     //animation params class 
-
-    private class AnimationThread extends Thread{
+    private class AnimationParams
+      {
         private int index;
-        private float startx;
-        private float starty;
-        private float endx;
-        private float endy;
+        private float sx;
+        private float sy;
+        private float ex;
+        private float ey;
+        private float dx;
+        private float dy;
+        private int step=0;
         private int steps;
-        //private int step;
-        private float deltax;
-        private float deltay;
-        //private Toolkit toolkit;
+        public AnimationParams(int index,float sx,float sy,float ex,float ey)
+        {
+          this.index=index;
+          this.sx=sx;
+          this.sx=sy;
+          this.sx=ex;
+          this.sx=ey;
+          steps=(int)(Math.sqrt((ex-sx)*(ex-sx)+(ey-sy)*(ey-sy))/10f);
+          dx=(ex-sx)/steps;
+          dy=(ey-sy)/steps;
+        }    
+       }
 
-        public AnimationThread(int index, float startx, float starty, float endx, float endy) { 
-            this.index=index;
-            this.startx=startx;
-            this.starty=starty;
-            this.endx=endx;
-            this.endy=endy;
-            steps=(int)(Math.sqrt((endx-startx)*(endx-startx)
-                                +(endy-starty)*(endy-starty))/10f);
-            deltax=(endx-startx)/steps;
-            deltay=(endy-starty)/steps;
-        }
 
-        public void run(){
-            try {
-                for(int i=0;i<steps;i++){
-                    sleep(20);
-                    bx[index]+=(int)(startx+i*deltax);
-                    by[index]+=(int)(starty+i*deltay);
-                    gamePanel.repaint();
-                    toolkit.sync();
+       private class GameThread extends Thread
+      {
+        public void run()
+        { try
+          {
+            while(true)
+            {
+                sleep(20);
+                synchronized(animationList)
+              {
+                for(int i=0;i<animationList.size();i++)
+                {
+                  AnimationParams ap=animationList.get(i);
+                  bx[ap.index]=(int)(ap.sx+ap.step*ap.dx);
+                  by[ap.index]=(int)(ap.sy+ap.step*ap.dy);
+                  ap.step++;
                 }
-                bx[index]=(int)endx;
-                by[index]=(int)endy;
-                
-            } catch (InterruptedException ie) {
-                
+                for(int i=animationList.size()-1;i>=0;i--)
+                {
+                  AnimationParams ap=animationList.get(i);
+                  bx[ap.index]=(int)ap.ex;
+                  by[ap.index]=(int)ap.ey;
+                  if(ap.step==ap.steps) animationList.remove(i);
+                } 
+                }
+              toolkit.sync();
+              gamePanel.repaint();
             }
         }
-    }
+          catch(InterruptedException ie) {}
+        }
+        }
 
     private class MouseHandler extends MouseAdapter 
     {
@@ -181,16 +202,16 @@ public class Project03 extends JFrame {
                 }
             }
 
-            if(!gone[selected]){
-                animationThread = new AnimationThread();
-                animationThread(selected, bx[selected], by[selected], origx, origy).start();
-            }
-            }
-            
             //reset the position of the ball once released
-            bx[selected]=origx;
-            by[selected]=origy;
-            gamePanel.repaint();
+            if(!gone[selected]){
+                synchronized(animationList)
+                {
+                  animationList.add(new AnimationParams(selected,bx[selected]
+                                              ,by[selected],origx,origy));
+                }
+            }
+            }
+
             //resets selected when mouse is released
             selected=-1;
         }
