@@ -205,7 +205,7 @@ public class Project04 extends JFrame {
                     gone[i]=true;
                 }
             }
-
+            
             
             }
             //reset the position of the ball once released
@@ -225,9 +225,30 @@ public class Project04 extends JFrame {
     private class MouseMotionHandler extends MouseMotionAdapter {
         public void mouseDragged(MouseEvent e) {
             if(selected==-1) return;
+            int px=bx[selected];
+            int py=by[selected];
             //sets the new offset positions while dragging
             bx[selected]=e.getX()-xoff; 
             by[selected]=e.getY()-yoff;
+            //makes a boundary
+            if(bx[selected]<20) bx[selected]=20;
+            boolean coll=false;
+            
+            
+            for(int i=0;i<bx.length;i++)
+            {
+                if(i==selected) continue;
+                double dx=bx[selected]-bx[i];
+                double dy=by[selected]-by[i];
+                if(Math.sqrt(dx*dx+dy*dy)<40){
+                    coll=true;
+                }
+            }
+            if(coll){
+                bx[selected]=px;
+                by[selected]=py;
+            }
+            
             gamePanel.repaint();
 
     }
