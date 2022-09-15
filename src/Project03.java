@@ -19,6 +19,8 @@ public class Project03 extends JFrame {
         private int selected=-1;
         private boolean[] gone;
         private int[] ia;
+        private Toolkit toolkit;
+        private AnimationThread animationThread;
 
 
     public Project03() {
@@ -103,6 +105,7 @@ public class Project03 extends JFrame {
             
         }
     }
+    //animation params class 
 
     private class AnimationThread extends Thread{
         private int index;
@@ -111,9 +114,10 @@ public class Project03 extends JFrame {
         private float endx;
         private float endy;
         private int steps;
+        //private int step;
         private float deltax;
         private float deltay;
-        private Toolkit toolkit;
+        //private Toolkit toolkit;
 
         public AnimationThread(int index, float startx, float starty, float endx, float endy) { 
             this.index=index;
@@ -178,7 +182,8 @@ public class Project03 extends JFrame {
             }
 
             if(!gone[selected]){
-                AnimationThread(selected, bx[selected], by[selected], origx, origy).start();
+                animationThread = new AnimationThread();
+                animationThread(selected, bx[selected], by[selected], origx, origy).start();
             }
             }
             
