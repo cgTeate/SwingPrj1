@@ -21,7 +21,6 @@ public class Project03 extends JFrame {
         private boolean[] gone;
         private int[] ia;
         private Toolkit toolkit;
-        private GameThread gameThread;
         ArrayList<AnimationParams> animationList;
 
 
@@ -127,20 +126,21 @@ public class Project03 extends JFrame {
         {
           this.index=index;
           this.sx=sx;
-          this.sx=sy;
-          this.sx=ex;
-          this.sx=ey;
+          this.sy=sy;
+          this.ex=ex;
+          this.ey=ey;
           steps=(int)(Math.sqrt((ex-sx)*(ex-sx)+(ey-sy)*(ey-sy))/10f);
           dx=(ex-sx)/steps;
           dy=(ey-sy)/steps;
         }    
        }
 
-
+    //AnimationThread
        private class GameThread extends Thread
       {
         public void run()
-        { try
+        { 
+            try
           {
             while(true)
             {
@@ -157,15 +157,19 @@ public class Project03 extends JFrame {
                 for(int i=animationList.size()-1;i>=0;i--)
                 {
                   AnimationParams ap=animationList.get(i);
-                  bx[ap.index]=(int)ap.ex;
-                  by[ap.index]=(int)ap.ey;
-                  if(ap.step==ap.steps) animationList.remove(i);
+                  //if animation is over, move the ball to the final position
+                  if(ap.step==ap.steps) 
+                  {
+                    bx[ap.index]=(int)ap.ex;
+                    by[ap.index]=(int)ap.ey;
+                    animationList.remove(i);
+                  }
                 } 
-                }
+               }
               toolkit.sync();
               gamePanel.repaint();
             }
-        }
+           }
           catch(InterruptedException ie) {}
         }
         }
@@ -202,6 +206,8 @@ public class Project03 extends JFrame {
                 }
             }
 
+            
+            }
             //reset the position of the ball once released
             if(!gone[selected]){
                 synchronized(animationList)
@@ -209,7 +215,6 @@ public class Project03 extends JFrame {
                   animationList.add(new AnimationParams(selected,bx[selected]
                                               ,by[selected],origx,origy));
                 }
-            }
             }
 
             //resets selected when mouse is released
