@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.imageio.*;
 import java.io.*;
 import java.util.*;
-
 public class Project04 extends JFrame {
         private GamePanel gamePanel;
         private int[] bx;
@@ -19,10 +18,10 @@ public class Project04 extends JFrame {
         private BufferedImage redBallBI;
         private int selected=-1;
         private boolean[] gone;
+        private boolean stuck;
         private int[] ia;
         private Toolkit toolkit;
         ArrayList<AnimationParams> animationList;
-
 
     public Project04() {
         super("Project04");
@@ -36,18 +35,17 @@ public class Project04 extends JFrame {
         gamePanel.addMouseMotionListener(mmh);
         add(gamePanel);
 
-
         bx=new int[10];
         by=new int[10];
         sx=new int[10];
         sy=new int[10];
         gone=new boolean[10];
         ia=new int[10];
-
         
        for (int i=0; i<ia.length; i++) ia[i]=i;
 
-        for(int i=0; i<ia.length; i++){
+        for(int i=0; i<ia.length; i++)
+        {
             int index = (int) (Math.random() * ia.length);
             int index2 = (int) (Math.random() * ia.length);
             int tmp=ia[index];
@@ -55,14 +53,13 @@ public class Project04 extends JFrame {
             ia[index2]=tmp;
         }
 
-        for(int i=0; i<bx.length; i++){
+        for(int i=0; i<bx.length; i++)
+        {
             bx[i]=40+(i%5)*50;
             by[i]=40+(i/5)*50;
             sx[i]=40+(i%5)*50;
             sy[i]=200+(i/5)*50;
         }
-
-        
 
         try {
             redBallBI=ImageIO.read(new File("red.png"));
@@ -71,7 +68,6 @@ public class Project04 extends JFrame {
         }
 
         animationList=new ArrayList<AnimationParams>();
-
         new GameThread().start();
 
         toolkit=getToolkit();
@@ -80,21 +76,37 @@ public class Project04 extends JFrame {
         setVisible(true);
     }
 
-
+    private boolean collision(int j, int nx, int ny)
+    {
+        for(int i=0;i<bx.length;i++)
+            {
+                if(i==j) continue;
+                double dx=nx-bx[i];
+                double dy=ny-by[i];
+                if(Math.sqrt(dx*dx+dy*dy)<40)
+                {
+                    return true;
+                }
+            }
+            return false;
+    }
     //view
-    private class GamePanel extends JPanel {
-        public void paintComponent(Graphics g) {
+    private class GamePanel extends JPanel 
+    {
+        public void paintComponent(Graphics g) 
+        {
             super.paintComponent(g);
-
             //draws the squares at the center of each
-            for(int i=0;i<bx.length;i++){
+            for(int i=0;i<bx.length;i++)
+            {
                 g.setColor(Color.BLACK);
                 g.fillRect(sx[i]-20,sy[i]-20,40,40);
                 g.setColor(Color.WHITE);
                 g.drawString(""+ia[i],sx[i]-3,sy[i]+4);
             }
             //draws the red balls at the center of each
-            for(int i=0;i<bx.length;i++){
+            for(int i=0;i<bx.length;i++)
+            {
                 if(gone[i]) continue;
                 if(i==selected)continue;
                 g.drawImage(redBallBI,bx[i]-20,by[i]-20,null);
@@ -102,12 +114,12 @@ public class Project04 extends JFrame {
                 g.drawString(""+ia[i],bx[i]-3,by[i]+4);
             }
             //draws selected ball over the others 
-            if(selected!=-1){
+            if(selected!=-1)
+            {
                 g.drawImage(redBallBI,bx[selected]-20,by[selected]+-20,null);
                 g.setColor(Color.WHITE);
                 g.drawString(""+ia[selected],bx[selected]-3,by[selected]+4);
             }
-            
         }
     }
     //animation params class 
@@ -134,7 +146,6 @@ public class Project04 extends JFrame {
           dy=(ey-sy)/steps;
         }    
        }
-
     //AnimationThread
        private class GameThread extends Thread
       {
@@ -173,14 +184,13 @@ public class Project04 extends JFrame {
           catch(InterruptedException ie) {}
         }
         }
-
+        
     private class MouseHandler extends MouseAdapter 
     {
         public void mousePressed(MouseEvent e) 
         {
             //tells which ball is selected
             for(int i=0;i<bx.length;i++){
-                
                 //if the mouse is within the ball
                 if(Math.abs(e.getX()-bx[i])<20 && Math.abs(e.getY()-by[i])<20)
                 {
@@ -192,21 +202,20 @@ public class Project04 extends JFrame {
                     yoff=e.getY()-by[i];
                     selected=i;
                 }
-                
             }
         }
         public void mouseReleased(MouseEvent e) {
-
             if(selected==-1) return;
             //check to see if you're within the matching square
-            for(int i=0;i<bx.length;i++){
-            if((Math.abs(e.getX()-sx[i]))<20 && (Math.abs(e.getY()-sy[i]))<20 ) {
-                if(i==selected){
+            for(int i=0;i<bx.length;i++)
+            {
+            if((Math.abs(e.getX()-sx[i]))<20 && (Math.abs(e.getY()-sy[i]))<20 ) 
+            {
+                if(i==selected)
+                {
                     gone[i]=true;
                 }
             }
-            
-            
             }
             //reset the position of the ball once released
             if(!gone[selected]){
@@ -216,43 +225,47 @@ public class Project04 extends JFrame {
                                               ,by[selected],origx,origy));
                 }
             }
-
             //resets selected when mouse is released
             selected=-1;
         }
     }
 
-    private class MouseMotionHandler extends MouseMotionAdapter {
-        public void mouseDragged(MouseEvent e) {
+    private class MouseMotionHandler extends MouseMotionAdapter 
+    {
+        public void mouseDragged(MouseEvent e) 
+        {
             if(selected==-1) return;
-            int px=bx[selected];
-            int py=by[selected];
-            //sets the new offset positions while dragging
-            bx[selected]=e.getX()-xoff; 
-            by[selected]=e.getY()-yoff;
-            //makes a boundary
-            if(bx[selected]<20) bx[selected]=20;
-            boolean coll=false;
-            
-            
-            for(int i=0;i<bx.length;i++)
+            //candidate position
+            int nx=e.getX();
+            int ny=e.getY();
+            if(stuck&&(Math.abs(bx[selected]-nx)>=40
+                    ||Math.abs(by[selected]-ny)>=40)) return;
+            boolean coll=collision(selected, nx, ny);
+            if(coll)
             {
-                if(i==selected) continue;
-                double dx=bx[selected]-bx[i];
-                double dy=by[selected]-by[i];
-                if(Math.sqrt(dx*dx+dy*dy)<40){
-                    coll=true;
+                double th=Math.atan2(ny-by[selected], nx-bx[selected]);
+                double dx=-Math.cos(th);
+                double dy=-Math.sin(th);
+                double nx2 = nx;
+                double ny2 = ny;
+                while(coll)
+                {
+                    nx2+=dx;
+                    ny2+=dy;
+                    coll=collision(selected, (int)Math.round(nx2), (int)Math.round(ny2));
                 }
+                bx[selected]=(int)Math.round(nx2);
+                by[selected]=(int)Math.round(ny2);
+                stuck=true;
             }
-            if(coll){
-                bx[selected]=px;
-                by[selected]=py;
+            else
+            {
+                bx[selected]=nx;
+                by[selected]=ny;
             }
-            
             gamePanel.repaint();
-
+        }
     }
-}
 
     public static void main(String[] args) {
         new Project04();
