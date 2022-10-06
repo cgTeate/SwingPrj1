@@ -44,9 +44,9 @@ public class Project02 extends JFrame {
         gone=new boolean[10];
         ia=new int[10];
 
-        
+        //store numbers 0-9 in an array
        for (int i=0; i<ia.length; i++) ia[i]=i;
-
+        //loop through the integer array and do swaps so that the numbers are randomized
         for(int i=0; i<ia.length; i++){
             int index = (int) (Math.random() * ia.length);
             int index2 = (int) (Math.random() * ia.length);
@@ -54,7 +54,7 @@ public class Project02 extends JFrame {
             ia[index]=ia[index2];
             ia[index2]=tmp;
         }
-
+        //set the positions for each ball and square
         for(int i=0; i<bx.length; i++){
             bx[i]=40+(i%5)*50;
             by[i]=40+(i/5)*50;
@@ -63,7 +63,7 @@ public class Project02 extends JFrame {
         }
 
         
-
+        //read the red ball image in
         try {
             redBallBI=ImageIO.read(new File("red.png"));
         } catch (IOException ioe) {

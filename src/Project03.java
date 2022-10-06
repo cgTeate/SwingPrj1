@@ -157,7 +157,7 @@ public class Project03 extends JFrame {
                 for(int i=animationList.size()-1;i>=0;i--)
                 {
                   AnimationParams ap=animationList.get(i);
-                  //if animation is over, move the ball to the final position
+                  //if animation is over, move the ball to the final position and remove from the array list
                   if(ap.step==ap.steps) 
                   {
                     bx[ap.index]=(int)ap.ex;
